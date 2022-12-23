@@ -1,3 +1,3 @@
-module github.com/goexl/wanip
+module github.com/goexl/model
 
-go 1.18
+go 1.19
