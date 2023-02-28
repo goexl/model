@@ -1,8 +1,17 @@
 package model
 
+import (
+	"time"
+)
+
 // User 基础用户数据
 type User struct {
-	Base `xorm:"extends"`
+	// 编号
+	Id int64 `xorm:"pk notnull unique index('idx_id') default(0)" json:"id,string"`
+	// 创建时间
+	Created time.Time `xorm:"created notnull default('2022-12-23 09:55:52')" json:"created"`
+	// 最后更新时间
+	Updated time.Time `xorm:"updated notnull default('2022-12-23 09:55:52')" json:"updated"`
 
 	// 用户名
 	Username string `xorm:"varchar(32) notnull default('') unique(uidx_name)" json:"username" validate:"omitempty,min=1,max=32,email"`

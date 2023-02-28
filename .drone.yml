@@ -1,10 +1,14 @@
 kind: pipeline
 type: docker
-name: # TODO
+name: 发布
 
 
 clone:
   disable: true
+
+
+environment:
+  CHANGELOG_TAG_OUTPUT: CHANGELOG.tag.md
 
 
 steps:
@@ -14,37 +18,52 @@ steps:
   - name: 编译
     image: ccr.ccs.tencentyun.com/pangum/drone
     volumes:
-      - name: go
-        path: /var/lib/go
+      - name: gopath
+        path: /var/lib/gopath
+      - name: gocache
+        path: /var/lib/gocache
+      - name: linter
+        path: /var/lib/linter
     settings:
-      output: # TODO
+      output:
+        name: model
+      compress:
+        enabled: false
+
+  - name: 改变
+    image: ccr.ccs.tencentyun.com/dronestock/changelog
+    when:
+      event:
+        - tag
+    settings:
+      output: $${CHANGELOG_TAG_OUTPUT}
+      tag: $${DRONE_TAG}
 
   - name: 发布
-    image: ccr.ccs.tencentyun.com/dronestock/docker
-    privileged: true
-    volumes:
-      - name: docker
-        path: /var/lib/docker
+    image: ccr.ccs.tencentyun.com/dronestock/github
+    when:
+      event:
+        - tag
     environment:
-      PASSWORD_DOCKER:
-        from_secret: token_docker
-      PASSWORD_CCR:
-        from_secret: password_tencentyun_ccr
+      TOKEN:
+        from_secret: token_github
     settings:
-      repository: # TODO
-      registries:
-        - username: # TODO
-          password: $${PASSWORD_DOCKER}
-        - hostname: ccr.ccs.tencentyun.com
-          username: "160290688"
-          password: $${PASSWORD_CCR}
-          required: true
+      release:
+        tag: $${DRONE_TAG}
+        token: $${TOKEN}
+        body: expr:file("$${CHANGELOG_TAG_OUTPUT}")
 
 
 volumes:
-  - name: go
+  - name: gopath
     host:
-      path: /var/lib/cache/go
+      path: /var/lib/cache/gopath
+  - name: gocache
+    host:
+      path: /var/lib/cache/gocache
+  - name: linter
+    host:
+      path: /var/lib/cache/linter
   - name: docker
     host:
       path: /var/lib/cache/docker
