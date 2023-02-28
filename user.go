@@ -14,6 +14,7 @@ type User struct {
 	Updated time.Time `xorm:"updated notnull default('2022-12-23 09:55:52')" json:"updated"`
 
 	// 用户名
+	// nolint: lll
 	Username string `xorm:"varchar(32) notnull default('') unique(uidx_name)" json:"username" validate:"omitempty,min=1,max=32,email"`
 	// 手机号
 	// 类似于+86-17089792784
