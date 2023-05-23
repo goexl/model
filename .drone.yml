@@ -1,3 +1,11 @@
+kind: secret
+name: token_github
+get:
+  path: secrets
+  name: token_github_storezhang
+---
+
+
 kind: pipeline
 type: docker
 name: 发布
@@ -14,24 +22,21 @@ environment:
 steps:
   - name: 代码
     image: ccr.ccs.tencentyun.com/dronestock/git
+    pull: always
 
   - name: 编译
     image: ccr.ccs.tencentyun.com/pangum/drone
+    pull: always
     volumes:
-      - name: gopath
-        path: /var/lib/gopath
-      - name: gocache
-        path: /var/lib/gocache
-      - name: linter
-        path: /var/lib/linter
+      - name: go
+        path: /var/lib/go
     settings:
-      output:
-        name: model
       compress:
         enabled: false
 
   - name: 改变
     image: ccr.ccs.tencentyun.com/dronestock/changelog
+    pull: always
     when:
       event:
         - tag
@@ -41,29 +46,21 @@ steps:
 
   - name: 发布
     image: ccr.ccs.tencentyun.com/dronestock/github
+    pull: always
     when:
       event:
         - tag
     environment:
-      TOKEN:
+      TOKEN_GITHUB:
         from_secret: token_github
     settings:
       release:
         tag: $${DRONE_TAG}
-        token: $${TOKEN}
-        body: expr:file("$${CHANGELOG_TAG_OUTPUT}")
+        token: $${TOKEN_GITHUB}
+        body: file('$${CHANGELOG_TAG_OUTPUT}')
 
 
 volumes:
-  - name: gopath
+  - name: go
     host:
-      path: /var/lib/cache/gopath
-  - name: gocache
-    host:
-      path: /var/lib/cache/gocache
-  - name: linter
-    host:
-      path: /var/lib/cache/linter
-  - name: docker
-    host:
-      path: /var/lib/cache/docker
+      path: /var/lib/cache/go
