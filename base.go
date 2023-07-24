@@ -13,3 +13,7 @@ type Base struct {
 	// 最后更新时间
 	Updated time.Time `xorm:"updated notnull default('2022-12-23 09:55:52')" json:"updated,omitempty"`
 }
+
+func (b *Base) Identify() int64 {
+	return b.Id
+}

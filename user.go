@@ -23,3 +23,7 @@ type User struct {
 	// 密码
 	Passwd string `xorm:"varchar(512) notnull default('')" json:"-"`
 }
+
+func (u *User) Identify() int64 {
+	return u.Id
+}
