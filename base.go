@@ -16,5 +16,5 @@ type Base struct {
 }
 
 func (b *Base) Identify() string {
-	return strconv.FormatInt(b.Id, 64)
+	return strconv.FormatInt(b.Id, 10)
 }
