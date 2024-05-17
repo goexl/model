@@ -8,11 +8,13 @@ import (
 // Base 基础数据库模型
 type Base struct {
 	// 编号
-	Id int64 `xorm:"pk notnull default(0)" json:"id,string,omitempty"`
+	Id int64 `xorm:"pk notnull default(0) comment('编号，用来唯一标识数据')" json:"id,string,omitempty"`
 	// 创建时间
-	Created time.Time `xorm:"created notnull default('2022-12-23 09:55:52')" json:"created,omitempty"`
+	// nolint:lll
+	Created time.Time `xorm:"created notnull default('2022-12-23 09:55:52')  comment('创建时间，创建时自动设置')" json:"created,omitempty"`
 	// 最后更新时间
-	Updated time.Time `xorm:"updated notnull default('2022-12-23 09:55:52')" json:"updated,omitempty"`
+	// nolint:lll
+	Updated time.Time `xorm:"updated notnull default('2022-12-23 09:55:52')  comment('最后更新时间，每次更新时自动修改')" json:"updated,omitempty"`
 }
 
 func (b *Base) Identify() string {
