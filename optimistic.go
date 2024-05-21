@@ -4,5 +4,5 @@ package model
 type Optimistic struct {
 	// 版本
 	// nolint:lll
-	Version int `xorm:"version notnull default(0) comment('当前版本，用于实现乐观锁，当更新时本字段自动增一')" json:"version,omitempty"`
+	Version int `xorm:"version notnull default(0) comment(版本，用于实现乐观锁，当更新时本字段自动增一)" json:"version,omitempty"`
 }
