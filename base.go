@@ -8,7 +8,7 @@ import (
 // Base 基础数据库模型
 type Base struct {
 	// 编号
-	Id uint64 `xorm:"pk bigint notnull default(0) comment(编号，用来唯一标识数据)" json:"id,string,omitempty"`
+	Id uint64 `xorm:"pk notnull default(0) comment(编号，用来唯一标识数据)" json:"id,string,omitempty"`
 	// 创建时间
 	// nolint:lll
 	Created time.Time `xorm:"created notnull default(CURRENT_TIMESTAMP) comment(创建时间，创建时自动设置)" json:"created,omitempty"`
